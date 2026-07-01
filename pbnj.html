@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peanut Butter No Jelly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#151312;
+    --card:#211d1a;
+    --card-hi:#2a2521;
+    --line:#3a332c;
+    --ink:#f2ede4;
+    --ink-dim:#a89f92;
+    --lime:#c9f13d;
+    --pink:#ff4d9d;
+    --orange:#ff8c1a;
+    --purple:#b07cff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Space Mono',monospace;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(201,241,61,0.05), transparent 40%),
+      radial-gradient(circle at 90% 20%, rgba(255,77,157,0.05), transparent 40%);
+  }
+  header{
+    padding:32px 20px 20px;
+    text-align:center;
+    border-bottom:2px dashed var(--line);
+  }
+  h1{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(28px,6vw,48px);
+    margin:0 0 6px;
+    line-height:0.95;
+    letter-spacing:-1px;
+  }
+  h1 .pb{color:var(--orange);}
+  h1 .nj{color:var(--purple);}
+  .tagline{
+    color:var(--ink-dim);
+    font-size:13px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .wrap{
+    max-width:1000px;
+    margin:0 auto;
+    padding:20px;
+  }
+  .pantry-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+    padding:12px 16px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+  .pantry-count{
+    font-family:'Archivo Black',sans-serif;
+    color:var(--lime);
+    font-size:14px;
+  }
+  .btn{
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink-dim);
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .btn:hover{border-color:var(--pink);color:var(--pink);}
+  .btn.primary{
+    background:var(--lime);
+    color:#151312;
+    border-color:var(--lime);
+  }
+  .btn.primary:hover{background:var(--orange);border-color:var(--orange);color:#151312;}
+
+  details.cat-toggle{margin-bottom:20px;}
+  details.cat-toggle > summary{
+    cursor:pointer;
+    font-family:'Archivo Black',sans-serif;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--lime);
+    padding:10px 0;
+    list-style:none;
+  }
+  details.cat-toggle > summary::-webkit-details-marker{display:none;}
+  details.cat-toggle > summary::before{content:"▸ ";}
+  details.cat-toggle[open] > summary::before{content:"▾ ";}
+
+  .categories{
+    display:grid;
+    gap:14px;
+    margin-bottom:10px;
+  }
+  .cat{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .cat h3{
+    margin:0 0 10px;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--orange);
+  }
+  .chip-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 12px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    font-size:12px;
+    cursor:pointer;
+    user-select:none;
+    color:var(--ink-dim);
+    transition:.12s;
+  }
+  .chip:hover{border-color:var(--ink-dim);color:var(--ink);}
+  .chip.on{
+    background:var(--lime);
+    border-color:var(--lime);
+    color:#151312;
+    font-weight:700;
+  }
+
+  .tabbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:26px 0 16px;
+    border-bottom:2px dashed var(--line);
+    padding-bottom:14px;
+  }
+  .tab{
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    padding:8px 14px;
+    border-radius:16px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--ink-dim);
+    cursor:pointer;
+    transition:.12s;
+  }
+  .tab:hover{border-color:var(--purple);color:var(--purple);}
+  .tab.active{
+    background:var(--purple);
+    border-color:var(--purple);
+    color:#151312;
+  }
+
+  .results-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin:14px 0 14px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .results-head h2{
+    font-family:'Archivo Black',sans-serif;
+    font-size:20px;
+    margin:0;
+  }
+  .sort-note{font-size:11px;color:var(--ink-dim);}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:14px;
+  }
+  .recipe{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    cursor:pointer;
+    transition:.15s;
+    position:relative;
+  }
+  .recipe:hover{border-color:var(--lime);transform:translateY(-2px);}
+  .recipe.match100{border-color:var(--lime);box-shadow:0 0 0 1px var(--lime) inset;}
+  .recipe .badge{
+    position:absolute;
+    top:12px;
+    right:12px;
+    font-size:10px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:10px;
+    background:var(--line);
+    color:var(--ink-dim);
+  }
+  .recipe.match100 .badge{background:var(--lime);color:#151312;}
+  .recipe h4{
+    font-family:'Archivo Black',sans-serif;
+    font-size:15px;
+    margin:0 22px 8px 0;
+    line-height:1.2;
+  }
+  .recipe .cat-label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--pink);
+    margin-bottom:8px;
+    display:block;
+  }
+  .recipe .ing-list{
+    font-size:11px;
+    color:var(--ink-dim);
+    line-height:1.6;
+  }
+  .recipe .ing-list b{color:var(--ink);font-weight:700;}
+
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(10,9,8,0.85);
+    z-index:50;
+    align-items:flex-start;
+    justify-content:center;
+    padding:30px 16px;
+    overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--card-hi);
+    border:1px solid var(--lime);
+    border-radius:14px;
+    max-width:560px;
+    width:100%;
+    padding:26px;
+    position:relative;
+  }
+  .modal .close{
+    position:absolute;
+    top:14px;right:14px;
+    background:none;border:none;
+    color:var(--ink-dim);
+    font-size:20px;
+    cursor:pointer;
+  }
+  .modal h3{
+    font-family:'Archivo Black',sans-serif;
+    font-size:22px;
+    margin:0 30px 4px 0;
+  }
+  .modal .cat-label{color:var(--pink);font-size:11px;text-transform:uppercase;letter-spacing:1px;}
+  .modal ul{padding-left:18px;margin:16px 0;}
+  .modal ul li{margin-bottom:4px;font-size:13px;}
+  .modal .steps{
+    font-size:13px;
+    line-height:1.7;
+    color:var(--ink);
+    border-top:1px dashed var(--line);
+    padding-top:14px;
+    margin-top:14px;
+    white-space:pre-line;
+  }
+  .empty{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--ink-dim);
+    font-size:13px;
+  }
+  footer{
+    text-align:center;
+    padding:30px;
+    font-size:11px;
+    color:var(--ink-dim);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="pb">Peanut Butter</span><br><span class="nj">No Jelly</span></h1>
+  <div class="tagline">recipes for when the fridge has nothing and rent is due</div>
+</header>
+
+<div class="wrap">
+
+  <div class="pantry-bar">
+    <div class="pantry-count" id="pantryCount">0 things selected</div>
+    <button class="btn" id="clearBtn">Clear my list</button>
+  </div>
+
+  <details class="cat-toggle" id="pantryToggle">
+    <summary>What's in your kitchen? (tap to open)</summary>
+    <div class="categories" id="categories"></div>
+  </details>
+
+  <div class="tabbar" id="tabbar"></div>
+
+  <div class="results-head">
+    <h2 id="resultsTitle">All recipes</h2>
+    <div class="sort-note" id="sortNote">tap a card for full instructions</div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyState" style="display:none;">nothing matches yet — check off what you've got</div>
+
+</div>
+
+<footer>made from an actual raided pantry &amp; freezer · 200 ways to feed yourself when it's rough out here</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const INGREDIENTS = {
+  "Instant / Quick Carbs": ["Ramen noodles","Ramen seasoning packet","Instant mac and cheese","Instant mashed potatoes","Instant rice","Rice-A-Roni","Cup noodles","Instant oatmeal","Pop-Tarts","Bagels","English muffins","Tortillas","Pita bread","Bread","Crackers","Saltine crackers","Spaghetti","Regular rice","Potato"],
+  "Cheap Protein": ["Eggs","Canned tuna","Canned chicken","Peanut butter","Hot dogs","Luncheon meat / Spam","Canned beans","Lentils","String cheese","Sliced cheese","Shredded cheese","Cottage cheese","Greek yogurt","Protein powder","Canned sausages","Bacon bits","Rotisserie chicken","Deli meat","Tofu"],
+  "Frozen / Microwave": ["Frozen burritos","Frozen pizza rolls","Frozen chicken nuggets","Mozzarella sticks","TV dinner","Frozen waffles","Hot Pockets","Frozen peas","Frozen corn","Frozen fries","Frozen meatballs","Ice cream"],
+  "Sweet / Snacks": ["Oreos","Nutella","Sprinkles","Chocolate syrup / Nesquik","Honey","Marshmallows","Graham crackers","Granola bar","Cereal","Cheerios","Pudding cup","Jello","Fruit snacks","Chips","Pretzels","Popcorn","Whipped cream","Frosting","Cake mix","Croutons","Brown sugar","Cinnamon sugar","Bananas"],
+  "Sauces & Flavor": ["Ranch","Hot sauce","Sriracha","Soy sauce","Ketchup","Mustard","Mayo","BBQ sauce","Salsa","Sour cream","Taco seasoning","Chicken bouillon","Worcestershire sauce","Enchilada sauce","Salsa verde","Marinara / pasta sauce","Garlic powder","Black pepper","Vegetable oil","Butter"],
+  "Caffeine / Drinks": ["Coffee grounds","Instant coffee","Energy drink","Soda","Coffee creamer","Sugar packets","Milk"],
+  "Broke Staples": ["Bread","Bagels","Tortilla chips","Canned soup","Gravy packet","Applesauce cup","Onion","Water","Fast food condiment packets","Canned diced tomatoes"]
+};
+
+const ALL_INGREDIENTS = [];
+Object.entries(INGREDIENTS).forEach(([cat, items])=>{
+  items.forEach(i=>{ if(!ALL_INGREDIENTS.includes(i)) ALL_INGREDIENTS.push(i); });
+});
+
+const RECIPES = [
+// ---------- NOODLES ----------
+{name:"Ramen Egg Drop", cat:"Noodles", ing:["Ramen noodles","Ramen seasoning packet","Eggs"], steps:"Boil ramen in water. Once boiling, crack an egg directly into the pot and stir fast so it ribbons through. Add seasoning packet last, off heat, so it doesn't get bitter."},
+{name:"Ramen Carbonara", cat:"Noodles", ing:["Ramen noodles","Eggs","Shredded cheese","Black pepper"], steps:"Cook ramen, drain, set aside off heat for 30 seconds. Crack an egg into the hot noodles and stir fast (noodle heat cooks the egg into a sauce — don't put it back on the burner or it scrambles). Add cheese and pepper."},
+{name:"Spicy Ranch Ramen", cat:"Noodles", ing:["Ramen noodles","Ramen seasoning packet","Ranch","Hot sauce"], steps:"Cook ramen as normal with seasoning packet. Drain most of the water, leave a splash. Stir in a spoon of ranch and hot sauce to taste."},
+{name:"Ramen Stir-Fry", cat:"Noodles", ing:["Ramen noodles","Soy sauce","Frozen peas","Eggs"], steps:"Boil noodles, drain fully (skip the seasoning packet water). Toss in a hot pan with soy sauce, frozen peas, and a scrambled egg mixed through."},
+{name:"Peanut Butter Noodles", cat:"Noodles", ing:["Ramen noodles","Peanut butter","Soy sauce","Sriracha"], steps:"Cook and drain noodles. Whisk peanut butter, soy sauce, and sriracha with a splash of hot water until smooth. Toss noodles in the sauce."},
+{name:"Cheesy Ramen", cat:"Noodles", ing:["Ramen noodles","Ramen seasoning packet","Sliced cheese"], steps:"Cook ramen with seasoning packet. Drain most of the liquid, lay a slice of cheese on top, stir until melted through."},
+{name:"Ramen Tuna Melt Bowl", cat:"Noodles", ing:["Ramen noodles","Canned tuna","Mayo","Shredded cheese"], steps:"Cook and drain ramen. Mix in canned tuna and a spoon of mayo. Top with cheese and microwave 30 seconds to melt."},
+{name:"Instant Mac Upgrade", cat:"Noodles", ing:["Instant mac and cheese","Hot dogs","Ketchup"], steps:"Make the mac and cheese as directed. Slice hot dogs into coins and stir in. Ketchup on the side or mixed in, your call."},
+{name:"Butter Noodles", cat:"Noodles", ing:["Ramen noodles","Butter","Garlic powder"], steps:"Boil noodles (skip the seasoning packet), drain, toss with butter and garlic powder while hot."},
+{name:"Chicken Bouillon Ramen Soup", cat:"Noodles", ing:["Ramen noodles","Chicken bouillon","Frozen peas"], steps:"Boil noodles in water with a dissolved bouillon cube instead of the seasoning packet, toss in frozen peas the last minute."},
+{name:"Creamy Ramen", cat:"Noodles", ing:["Ramen noodles","Milk","Butter","Ramen seasoning packet"], steps:"Cook ramen but replace half the water with milk near the end. Stir in butter and the seasoning packet off heat for a creamy, less-salty bowl."},
+{name:"Ramen Pizza on Pita", cat:"Noodles", ing:["Pita bread","Marinara / pasta sauce","Shredded cheese"], steps:"Spread sauce on a pita, top with cheese, bake or toaster-oven it until melted and the edges crisp up."},
+{name:"Ramen Grilled Cheese Mashup", cat:"Noodles", ing:["Ramen noodles","Bread","Sliced cheese","Butter"], steps:"Cook and drain noodles, press between buttered bread with cheese, grill in a pan like a grilled cheese until crispy."},
+{name:"Chili Ramen", cat:"Noodles", ing:["Ramen noodles","Canned soup","Shredded cheese"], steps:"Cook and drain ramen. Heat a can of chili-style soup separately, pour over noodles, top with cheese."},
+{name:"Tomato Soup Pasta Hack", cat:"Noodles", ing:["Canned soup","Ramen noodles"], steps:"Heat a can of tomato soup thinned with a little water. Cook noodles separately, drain, mix into the soup instead of eating it as soup."},
+{name:"Garlic Butter Spaghetti", cat:"Noodles", ing:["Spaghetti","Butter","Garlic powder","Black pepper"], steps:"Boil spaghetti, drain but save a splash of pasta water. Toss with butter, garlic powder, and pepper until glossy."},
+{name:"Marinara Spaghetti", cat:"Noodles", ing:["Spaghetti","Marinara / pasta sauce","Shredded cheese"], steps:"Boil spaghetti, drain. Heat sauce in the same pot, add noodles back in, top with cheese."},
+{name:"Tuna Spaghetti", cat:"Noodles", ing:["Spaghetti","Canned tuna","Marinara / pasta sauce"], steps:"Cook spaghetti, drain. Heat sauce with the drained tuna stirred in, then combine with noodles."},
+{name:"Meatball Ramen Bowl", cat:"Noodles", ing:["Ramen noodles","Frozen meatballs","Marinara / pasta sauce"], steps:"Heat frozen meatballs in sauce until warmed through. Cook and drain ramen separately, pour saucy meatballs over top."},
+{name:"Peas and Butter Noodles", cat:"Noodles", ing:["Ramen noodles","Frozen peas","Butter"], steps:"Boil noodles, add frozen peas the last minute to cook them together, drain, toss with butter."},
+{name:"Instant Mac and Tuna", cat:"Noodles", ing:["Instant mac and cheese","Canned tuna"], steps:"Make the mac and cheese as directed, stir in a drained can of tuna at the end."},
+{name:"Sriracha Butter Noodles", cat:"Noodles", ing:["Ramen noodles","Butter","Sriracha","Soy sauce"], steps:"Boil and drain noodles, toss with butter, a squeeze of sriracha, and a splash of soy sauce."},
+{name:"Cup Noodle Egg Upgrade", cat:"Noodles", ing:["Cup noodles","Eggs"], steps:"Make cup noodles with slightly less water than instructed, crack an egg in right after adding hot water, cover and let sit an extra 2 minutes so it poaches."},
+{name:"BBQ Ramen", cat:"Noodles", ing:["Ramen noodles","BBQ sauce","Shredded cheese"], steps:"Cook and drain ramen, stir in a couple spoons of BBQ sauce, top with cheese and microwave to melt."},
+
+// ---------- RICE ----------
+{name:"Fried Rice, Broke Style", cat:"Rice", ing:["Instant rice","Soy sauce","Eggs","Frozen peas"], steps:"Cook instant rice. Scramble egg in a hot pan, push aside, add rice and frozen peas, stir in soy sauce until everything's coated and a little crispy on the bottom."},
+{name:"Broke Burrito Bowl", cat:"Rice", ing:["Instant rice","Canned beans","Salsa","Hot sauce"], steps:"Cook rice. Heat beans in the same pot for a minute. Combine, top with salsa and hot sauce."},
+{name:"Bouillon Rice", cat:"Rice", ing:["Regular rice","Chicken bouillon","Butter"], steps:"Cook rice in water with a dissolved bouillon cube instead of plain water. Stir in butter at the end."},
+{name:"Rice-A-Roni Plus Egg", cat:"Rice", ing:["Rice-A-Roni","Eggs"], steps:"Make Rice-A-Roni as directed. Crack an egg in during the last 2 minutes of cooking and stir through like fried rice."},
+{name:"Enchilada Rice Bowl", cat:"Rice", ing:["Instant rice","Enchilada sauce","Shredded cheese"], steps:"Cook rice. Stir in a few spoons of enchilada sauce and top with cheese, microwave to melt."},
+{name:"Salsa Verde Rice", cat:"Rice", ing:["Instant rice","Salsa verde","Sour cream"], steps:"Cook rice, stir in salsa verde, top with a dollop of sour cream."},
+{name:"Black Beans and Rice", cat:"Rice", ing:["Canned beans","Instant rice","Salsa"], steps:"Cook rice, heat beans, combine, top with salsa. Add hot sauce if you've got it."},
+{name:"Spam Fried Rice", cat:"Rice", ing:["Luncheon meat / Spam","Instant rice","Soy sauce","Eggs"], steps:"Fry cubed Spam until crispy, push aside, scramble egg in same pan, add rice and soy sauce, stir together."},
+{name:"BBQ Chicken Rice", cat:"Rice", ing:["Canned chicken","Instant rice","BBQ sauce"], steps:"Cook rice, heat canned chicken with a few spoons of BBQ sauce, mix together."},
+{name:"Eggy Rice", cat:"Rice", ing:["Instant rice","Eggs","Soy sauce","Butter"], steps:"Cook rice. In a pan, melt butter, scramble the egg into small pieces, mix in rice and soy sauce, stir until warmed through."},
+{name:"Taco Rice Bowl", cat:"Rice", ing:["Instant rice","Canned beans","Taco seasoning","Shredded cheese"], steps:"Cook rice. Heat beans with a spoon of taco seasoning stirred in, combine with rice, top with cheese."},
+{name:"Tuna Rice Bowl", cat:"Rice", ing:["Instant rice","Canned tuna","Mayo","Soy sauce"], steps:"Cook rice. Mix tuna with mayo and a splash of soy sauce, spoon over the rice."},
+{name:"Sausage Fried Rice", cat:"Rice", ing:["Canned sausages","Instant rice","Soy sauce"], steps:"Slice and fry canned sausages until edges brown, add cooked rice and soy sauce, stir-fry together."},
+{name:"Onion Butter Rice", cat:"Rice", ing:["Regular rice","Onion","Butter","Black pepper"], steps:"Sauté chopped onion in butter until soft, add cooked rice, toss with pepper."},
+{name:"Coconut-ish Rice", cat:"Rice", ing:["Regular rice","Milk","Brown sugar"], steps:"Cook rice with half water half milk instead of all water. Stir in a spoon of brown sugar at the end for a dessert-y side."},
+{name:"Chicken Bouillon Rice and Beans", cat:"Rice", ing:["Regular rice","Chicken bouillon","Canned beans"], steps:"Cook rice in bouillon water. Heat beans separately, combine, season with pepper if you want."},
+{name:"Rice-A-Roni Tuna Mix", cat:"Rice", ing:["Rice-A-Roni","Canned tuna"], steps:"Make Rice-A-Roni as directed, stir in a drained can of tuna in the last few minutes of cooking."},
+{name:"Loaded Rice Bowl", cat:"Rice", ing:["Instant rice","Frozen corn","Shredded cheese","Sour cream"], steps:"Cook rice with frozen corn added the last 2 minutes. Top with cheese and sour cream."},
+{name:"Ketchup Fried Rice", cat:"Rice", ing:["Instant rice","Eggs","Ketchup","Butter"], steps:"Scramble egg in butter, add rice, stir in a couple spoons of ketchup until everything's pink-orange and coated. Sounds weird, tastes like a diner hash."},
+
+// ---------- TOAST / BREAD ----------
+{name:"Grilled Cheese", cat:"Toast & Bread", ing:["Bread","Sliced cheese","Butter"], steps:"Butter the outside of two bread slices, cheese in the middle, grill in a pan on medium until golden both sides."},
+{name:"Tuna Melt", cat:"Toast & Bread", ing:["Bread","Canned tuna","Mayo","Sliced cheese"], steps:"Mix tuna with mayo, spread on bread, top with cheese, broil or pan-toast until melted."},
+{name:"Sad But Fed Toast", cat:"Toast & Bread", ing:["Bread","Peanut butter","Honey"], steps:"Toast bread. Spread peanut butter, drizzle honey on top. That's dinner and it's fine."},
+{name:"Mayo Sandwich", cat:"Toast & Bread", ing:["Bread","Mayo"], steps:"Two slices of bread, mayo in the middle. This is a real thing broke people eat. No judgment."},
+{name:"Ranch Everything Sandwich", cat:"Toast & Bread", ing:["Bread","Ranch","Sliced cheese"], steps:"Spread ranch on bread like mayo, add cheese, toast it or eat it cold, doesn't matter."},
+{name:"Egg in a Basket", cat:"Toast & Bread", ing:["Bread","Eggs","Butter"], steps:"Cut a hole in a bread slice, butter a pan, lay the bread down, crack the egg into the hole. Cook a couple minutes each side."},
+{name:"Broke Breakfast Taco", cat:"Toast & Bread", ing:["Tortillas","Eggs","Hot sauce"], steps:"Scramble eggs, wrap in a warm tortilla, hot sauce on top."},
+{name:"Bean and Cheese Burrito", cat:"Toast & Bread", ing:["Tortillas","Canned beans","Shredded cheese"], steps:"Heat beans, mash slightly, roll into a tortilla with cheese, pan-fry seam-down until sealed."},
+{name:"Broke Quesadilla", cat:"Toast & Bread", ing:["Tortillas","Shredded cheese","Salsa"], steps:"Cheese between two tortillas (or folded), pan fry both sides until melted. Dip in salsa."},
+{name:"Nutella Toast", cat:"Toast & Bread", ing:["Bread","Nutella"], steps:"Toast bread, spread Nutella while it's hot so it gets a little melty."},
+{name:"BLT-ish (No L, No T)", cat:"Toast & Bread", ing:["Bread","Bacon bits","Mayo"], steps:"Mix bacon bits into mayo, spread on toasted bread. Add cheese if you want, it's not going to stop you."},
+{name:"Deli Meat Roll-Up", cat:"Toast & Bread", ing:["Deli meat","Sliced cheese","Tortillas"], steps:"Layer deli meat and cheese on a tortilla, roll tight, slice into pinwheels if you're feeling fancy."},
+{name:"Ranch Chicken Wrap", cat:"Toast & Bread", ing:["Canned chicken","Tortillas","Ranch","Shredded cheese"], steps:"Mix canned chicken with ranch, roll into a tortilla with cheese, pan fry seam down if you want it warm."},
+{name:"Pizza Bagel", cat:"Toast & Bread", ing:["Bagels","Marinara / pasta sauce","Shredded cheese"], steps:"Split bagel, spread sauce, top with cheese, toaster oven or broil until melted and bubbly."},
+{name:"Pizza Pita", cat:"Toast & Bread", ing:["Pita bread","Marinara / pasta sauce","Shredded cheese"], steps:"Spread sauce on pita, top with cheese, bake or toaster-oven until crispy and melted."},
+{name:"English Muffin Egg Sandwich", cat:"Toast & Bread", ing:["English muffins","Eggs","Sliced cheese"], steps:"Fry an egg, toast the muffin, cheese melted on the egg, stack it together."},
+{name:"BBQ Chicken Quesadilla", cat:"Toast & Bread", ing:["Tortillas","Canned chicken","BBQ sauce","Shredded cheese"], steps:"Mix chicken with BBQ sauce, layer with cheese in a tortilla, pan fry both sides until crispy and melted."},
+{name:"Honey Butter Bagel", cat:"Toast & Bread", ing:["Bagels","Butter","Honey"], steps:"Toast the bagel, mix softened butter with honey, spread while warm."},
+{name:"Broke French Toast", cat:"Toast & Bread", ing:["Bread","Eggs","Milk","Cinnamon sugar"], steps:"Whisk egg and milk, dip bread slices, fry in a buttered pan until golden, sprinkle cinnamon sugar on top."},
+{name:"Salsa Scramble Wrap", cat:"Toast & Bread", ing:["Tortillas","Eggs","Salsa","Shredded cheese"], steps:"Scramble eggs, mix in a spoon of salsa near the end, wrap in a tortilla with cheese."},
+{name:"Cracker Tuna Stack", cat:"Toast & Bread", ing:["Saltine crackers","Canned tuna","Mayo"], steps:"Mix tuna with mayo, spoon onto crackers like little open-face sandwiches."},
+{name:"Grilled PB Sandwich", cat:"Toast & Bread", ing:["Bread","Peanut butter","Butter"], steps:"Spread peanut butter on bread, butter the outside, grill in a pan like a grilled cheese until warm and toasted."},
+{name:"Worcestershire Butter Toast", cat:"Toast & Bread", ing:["Bread","Butter","Worcestershire sauce"], steps:"Mix a few drops of Worcestershire into softened butter, spread on bread, toast in a pan until crispy — savory, weirdly good."},
+{name:"Chips and Cheese Melt", cat:"Toast & Bread", ing:["Tortilla chips","Shredded cheese","Salsa"], steps:"Layer chips on a plate, top with cheese, microwave until melted, top with salsa. Basically nachos with what you've got."},
+
+// ---------- EGGS ----------
+{name:"Scrambled Eggs Deluxe", cat:"Eggs", ing:["Eggs","Butter","Shredded cheese"], steps:"Scramble eggs low and slow in butter, fold in cheese right before they finish cooking."},
+{name:"Fried Egg Over Anything", cat:"Eggs", ing:["Eggs","Butter"], steps:"Fry an egg in butter, crispy edges, runny yolk if you're brave. Put it on whatever else you made — rice, noodles, toast, doesn't matter."},
+{name:"Deviled-ish Eggs", cat:"Eggs", ing:["Eggs","Mayo","Mustard"], steps:"Hard boil eggs, halve them, mash yolks with mayo and mustard, spoon back in."},
+{name:"Microwave Egg Mug", cat:"Eggs", ing:["Eggs","Milk","Shredded cheese"], steps:"Whisk egg and a splash of milk in a mug, microwave 45 seconds, stir, microwave another 30-45 seconds. Top with cheese."},
+{name:"Hot Sauce Eggs", cat:"Eggs", ing:["Eggs","Hot sauce","Butter"], steps:"Scramble or fry eggs in butter, hot sauce stirred in or drizzled over the top."},
+{name:"Salsa Egg Scramble", cat:"Eggs", ing:["Eggs","Salsa","Shredded cheese"], steps:"Scramble eggs, stir in a spoon of salsa near the end, top with cheese and let it melt off the heat."},
+{name:"Onion Egg Scramble", cat:"Eggs", ing:["Eggs","Onion","Butter"], steps:"Sauté chopped onion in butter until soft, pour in whisked eggs, scramble together."},
+{name:"Ranch Deviled Eggs", cat:"Eggs", ing:["Eggs","Mayo","Ranch"], steps:"Hard boil and halve eggs, mash yolks with mayo and a spoon of ranch instead of mustard, spoon back in."},
+{name:"Bacon Bit Scramble", cat:"Eggs", ing:["Eggs","Bacon bits","Shredded cheese"], steps:"Scramble eggs, stir in bacon bits and cheese in the last minute of cooking."},
+{name:"Egg and Cheese Rice Bowl", cat:"Eggs", ing:["Eggs","Instant rice","Soy sauce"], steps:"Cook rice, fry an egg sunny-side up, put it on top of the rice with soy sauce drizzled over."},
+{name:"Hard Boiled Snack Eggs", cat:"Eggs", ing:["Eggs","Black pepper"], steps:"Hard boil a few eggs at once, keep them in the fridge, peel and eat with a little salt and pepper whenever."},
+{name:"Egg and Chip Sandwich", cat:"Eggs", ing:["Eggs","Bread","Chips"], steps:"Fry an egg, put it on bread, crush a handful of chips into the sandwich for crunch. UK dorm classic, don't knock it."},
+
+// ---------- CANNED GOODS ----------
+{name:"Canned Soup Rescue", cat:"Canned Goods", ing:["Canned soup","Saltine crackers"], steps:"Heat soup, crush crackers on top for texture and to make it feel like a meal."},
+{name:"Tuna Salad Cup", cat:"Canned Goods", ing:["Canned tuna","Mayo","Mustard"], steps:"Mix tuna with mayo and a small squeeze of mustard. Eat with crackers or on bread."},
+{name:"Hot Dog Bean Bowl", cat:"Canned Goods", ing:["Hot dogs","Canned beans","Ketchup"], steps:"Slice hot dogs, heat with beans in a pan a few minutes, ketchup swirled in or on the side."},
+{name:"Doctored Tomato Soup", cat:"Canned Goods", ing:["Canned soup","Milk","Butter"], steps:"Heat tomato soup with milk instead of water, stir in a pat of butter for a creamier version."},
+{name:"Beans and Bacon Bits", cat:"Canned Goods", ing:["Canned beans","Bacon bits","BBQ sauce"], steps:"Heat beans in a pan, stir in bacon bits and a spoon of BBQ sauce, simmer a couple minutes."},
+{name:"Canned Chicken Salad", cat:"Canned Goods", ing:["Canned chicken","Mayo","Mustard"], steps:"Drain canned chicken, mix with mayo and mustard, eat on bread or crackers."},
+{name:"Diced Tomato Egg Skillet", cat:"Canned Goods", ing:["Canned diced tomatoes","Eggs","Shredded cheese"], steps:"Heat diced tomatoes in a pan, crack eggs directly into the sauce, cover and cook until whites set, top with cheese."},
+{name:"Chili Cheese Anything", cat:"Canned Goods", ing:["Canned soup","Shredded cheese","Tortilla chips"], steps:"Heat a hearty canned soup (chili-style if you have it), top with cheese and crushed chips for crunch."},
+{name:"Beans and Rice Enchilada Style", cat:"Canned Goods", ing:["Canned beans","Instant rice","Enchilada sauce","Shredded cheese"], steps:"Cook rice, heat beans with enchilada sauce stirred in, combine, top with cheese and microwave to melt."},
+{name:"Sausage and Beans Skillet", cat:"Canned Goods", ing:["Canned sausages","Canned beans","Ketchup"], steps:"Slice and brown sausages in a pan, add beans and a spoon of ketchup, simmer together a few minutes."},
+{name:"Tuna Melt Rice Bowl", cat:"Canned Goods", ing:["Canned tuna","Instant rice","Mayo","Shredded cheese"], steps:"Cook rice, mix in tuna and mayo, top with cheese, microwave until melted."},
+{name:"Gravy Rice", cat:"Canned Goods", ing:["Gravy packet","Instant rice"], steps:"Make gravy from the packet as directed, pour over cooked rice."},
+{name:"Applesauce Snack Cup", cat:"Canned Goods", ing:["Applesauce cup","Cinnamon sugar"], steps:"Open the cup, sprinkle cinnamon sugar on top. Snack, not a meal, but it counts."},
+{name:"Loaded Canned Chicken Tortilla", cat:"Canned Goods", ing:["Canned chicken","Tortillas","Salsa","Shredded cheese"], steps:"Mix chicken with salsa, wrap in a tortilla with cheese, pan-fry or microwave until warm."},
+{name:"Bean and Corn Skillet", cat:"Canned Goods", ing:["Canned beans","Frozen corn","Taco seasoning"], steps:"Heat beans and corn together in a pan with a spoon of taco seasoning stirred in."},
+{name:"Sardine-Style Tuna Crackers", cat:"Canned Goods", ing:["Canned tuna","Saltine crackers","Hot sauce"], steps:"Fork the tuna straight onto crackers, hot sauce drizzled on top. Fast protein, zero dishes."},
+{name:"Ketchup Beans", cat:"Canned Goods", ing:["Canned beans","Ketchup","Bread"], steps:"Heat beans with a couple spoons of ketchup stirred in, serve over toast — British dorm classic."},
+{name:"Chicken Noodle Upgrade", cat:"Canned Goods", ing:["Canned soup","Ramen noodles"], steps:"Cook noodles separately, drain, add to heated canned soup instead of the flimsy noodles that came with it."},
+
+// ---------- FROZEN / MICROWAVE ----------
+{name:"Frozen Nugget Upgrade", cat:"Frozen & Microwave", ing:["Frozen chicken nuggets","Hot sauce","Ranch"], steps:"Cook nuggets per the bag. Toss in hot sauce for a buffalo situation, dip in ranch."},
+{name:"Mozzarella Stick Marinara Cheat", cat:"Frozen & Microwave", ing:["Mozzarella sticks","Canned soup"], steps:"Cook mozz sticks per the bag. Heat tomato soup thick (less water than normal) as a dip instead of buying marinara."},
+{name:"Loaded Frozen Fries", cat:"Frozen & Microwave", ing:["Frozen fries","Shredded cheese","Bacon bits","Ranch"], steps:"Bake or air fry the fries. Top with cheese in the last few minutes to melt, then bacon bits and a ranch drizzle."},
+{name:"Burrito Bowl Deconstruct", cat:"Frozen & Microwave", ing:["Frozen burritos","Salsa","Sour cream"], steps:"Microwave the burrito, chop it up in a bowl instead of eating it whole, top with salsa and sour cream like a bowl."},
+{name:"Pizza Roll Dip Plate", cat:"Frozen & Microwave", ing:["Frozen pizza rolls","Marinara / pasta sauce"], steps:"Cook pizza rolls per the bag, heat sauce for dipping instead of eating them plain."},
+{name:"Frozen Waffle Sandwich", cat:"Frozen & Microwave", ing:["Frozen waffles","Peanut butter","Honey"], steps:"Toast two waffles, peanut butter and honey in the middle like a sandwich, eat with your hands."},
+{name:"TV Dinner Cheese Boost", cat:"Frozen & Microwave", ing:["TV dinner","Shredded cheese"], steps:"Microwave the TV dinner as directed, add extra cheese on top for the last minute of cooking."},
+{name:"Meatball Sub Cheat", cat:"Frozen & Microwave", ing:["Frozen meatballs","Bread","Marinara / pasta sauce","Shredded cheese"], steps:"Heat meatballs in sauce, pile onto bread, top with cheese, broil a minute to melt."},
+{name:"Corn and Butter Bowl", cat:"Frozen & Microwave", ing:["Frozen corn","Butter","Black pepper"], steps:"Microwave frozen corn in a splash of water, drain, toss with butter and pepper."},
+{name:"Frozen Pea Mash Side", cat:"Frozen & Microwave", ing:["Frozen peas","Butter","Black pepper"], steps:"Microwave peas, drain, mash lightly with butter and pepper for a quick side."},
+{name:"Hot Pocket Dip Combo", cat:"Frozen & Microwave", ing:["Hot Pockets","Marinara / pasta sauce"], steps:"Microwave per the box, dip in warm sauce instead of eating plain."},
+{name:"Nugget Rice Bowl", cat:"Frozen & Microwave", ing:["Frozen chicken nuggets","Instant rice","BBQ sauce"], steps:"Cook nuggets, chop into pieces, serve over rice with BBQ sauce drizzled on top."},
+{name:"Ice Cream Sandwich Hack", cat:"Frozen & Microwave", ing:["Ice cream","Frozen waffles"], steps:"Soften ice cream slightly, spread between two frozen waffles, freeze again for 20 minutes if you can wait that long."},
+
+// ---------- SWEET / SNACKS ----------
+{name:"Applesauce Oatmeal", cat:"Sweet & Snacks", ing:["Instant oatmeal","Applesauce cup","Cinnamon sugar"], steps:"Make oatmeal as directed, stir in a cup of applesauce instead of sugar, sprinkle cinnamon sugar on top."},
+{name:"Cereal No Milk", cat:"Sweet & Snacks", ing:["Cereal"], steps:"Eat it dry, straight from the box or bowl. It happens. It's fine."},
+{name:"PB2 Yogurt Bowl", cat:"Sweet & Snacks", ing:["Greek yogurt","Honey","Cereal"], steps:"Mix yogurt with honey, top with a handful of cereal for crunch."},
+{name:"Mug Brownie", cat:"Sweet & Snacks", ing:["Cake mix","Water","Milk"], steps:"Mix a few spoons of cake mix with a splash of milk or water in a mug until it's a thick batter. Microwave 60-90 seconds."},
+{name:"Frosting Straight Up", cat:"Sweet & Snacks", ing:["Frosting"], steps:"Open the can. Get a spoon. You know what you're doing."},
+{name:"Protein Shake Rescue", cat:"Sweet & Snacks", ing:["Protein powder","Milk","Peanut butter"], steps:"Blend or shake protein powder with milk and a spoon of peanut butter for a thicker, more filling shake."},
+{name:"Popcorn Hot Sauce", cat:"Sweet & Snacks", ing:["Popcorn","Hot sauce","Black pepper"], steps:"Pop the popcorn, toss with a few drops of hot sauce and cracked pepper while hot."},
+{name:"Croutons as a Snack", cat:"Sweet & Snacks", ing:["Croutons"], steps:"Just eat the croutons. No shame, they're just seasoned bread cubes and they're good."},
+{name:"Energy Drink Float", cat:"Sweet & Snacks", ing:["Energy drink","Ice cream"], steps:"Scoop ice cream into a glass, pour energy drink over it like a root beer float. Don't overthink it, it works."},
+{name:"Banana PB Roll-Up", cat:"Sweet & Snacks", ing:["Tortillas","Peanut butter","Bananas","Honey"], steps:"Spread peanut butter on a tortilla, lay a banana in, drizzle honey, roll up tight and slice into rounds."},
+{name:"Oreo Milkshake", cat:"Sweet & Snacks", ing:["Oreos","Ice cream","Milk"], steps:"Blend or mash Oreos with ice cream and a splash of milk until shake consistency."},
+{name:"Chocolate Milk Upgrade", cat:"Sweet & Snacks", ing:["Milk","Chocolate syrup / Nesquik"], steps:"Mix chocolate syrup into cold milk, stir well. The most reliable dessert in existence."},
+{name:"Marshmallow Cereal Bars", cat:"Sweet & Snacks", ing:["Cereal","Marshmallows","Butter"], steps:"Melt butter and marshmallows together in a pan, stir in cereal until coated, press into a dish and let cool."},
+{name:"Nutella Banana Toast", cat:"Sweet & Snacks", ing:["Bread","Nutella","Bananas"], steps:"Toast bread, spread Nutella, top with sliced banana."},
+{name:"Pudding Cup Upgrade", cat:"Sweet & Snacks", ing:["Pudding cup","Whipped cream","Crackers"], steps:"Top pudding with whipped cream, crumble crackers on top for crunch."},
+{name:"Graham Cracker PB Sandwich", cat:"Sweet & Snacks", ing:["Graham crackers","Peanut butter","Chocolate syrup / Nesquik"], steps:"Spread peanut butter between two graham crackers, drizzle chocolate syrup on top."},
+{name:"Fruit Snack Jello Cup", cat:"Sweet & Snacks", ing:["Jello","Fruit snacks"], steps:"Make jello as directed, stir in fruit snacks before it fully sets for a chewy surprise."},
+{name:"Whipped Cream Hot Chocolate", cat:"Sweet & Snacks", ing:["Milk","Chocolate syrup / Nesquik","Whipped cream"], steps:"Heat milk (careful not to boil), stir in chocolate syrup, top with whipped cream."},
+{name:"Cinnamon Sugar Toast", cat:"Sweet & Snacks", ing:["Bread","Butter","Cinnamon sugar"], steps:"Butter bread, sprinkle cinnamon sugar generously, toast in a pan until the sugar caramelizes a bit."},
+{name:"Chips and Frosting (Yes Really)", cat:"Sweet & Snacks", ing:["Chips","Frosting"], steps:"Salty-sweet dip. Dunk chips straight into the frosting can. Don't knock it till you try it."},
+{name:"Sugar Packet Coffee Creamer", cat:"Sweet & Snacks", ing:["Coffee grounds","Sugar packets","Coffee creamer"], steps:"Brew coffee, stir in a couple sugar packets and creamer to taste. Basic but it works."},
+{name:"Granola Bar Crumble Yogurt", cat:"Sweet & Snacks", ing:["Greek yogurt","Granola bar","Honey"], steps:"Crumble a granola bar into yogurt, drizzle honey on top."},
+{name:"Marshmallow Hot Cocoa Bomb", cat:"Sweet & Snacks", ing:["Milk","Chocolate syrup / Nesquik","Marshmallows"], steps:"Heat milk, stir in chocolate syrup, drop marshmallows in right before serving so they float and melt slightly."},
+{name:"Pretzel PB Dip", cat:"Sweet & Snacks", ing:["Pretzels","Peanut butter"], steps:"Dip pretzels straight into the peanut butter jar. Salty-sweet, zero prep."},
+
+// ---------- DRINKS ----------
+{name:"Broke Iced Coffee", cat:"Drinks", ing:["Instant coffee","Water","Milk","Sugar packets"], steps:"Dissolve instant coffee in a splash of hot water, fill the rest of the glass with ice and milk, sweeten to taste."},
+{name:"Energy Drink Slushy", cat:"Drinks", ing:["Energy drink","Ice cream"], steps:"Blend energy drink with a scoop of ice cream until slushy. High risk, high reward."},
+{name:"Coffee Creamer Hack", cat:"Drinks", ing:["Coffee grounds","Coffee creamer","Sugar packets"], steps:"Brew coffee, add creamer and sugar to taste — basically a dorm room latte."},
+{name:"Soda Float", cat:"Drinks", ing:["Soda","Ice cream"], steps:"Scoop ice cream into a glass, pour soda over slowly so it doesn't overflow. Classic for a reason."},
+{name:"Honey Lemon-less Tea Substitute", cat:"Drinks", ing:["Water","Honey"], steps:"Heat water, stir in honey. Not fancy, but soothing when you're broke and a little sick."},
+
+// ---------- DESPERATE TIER ----------
+{name:"Ramen Seasoning Straight Up", cat:"Desperate Tier", ing:["Ramen seasoning packet"], steps:"Open the packet, eat it dry off a spoon or sprinkle on literally anything bland. This is peak desperate tier and everyone's done it."},
+{name:"Ketchup Packet Hoard Snack", cat:"Desperate Tier", ing:["Fast food condiment packets","Saltine crackers"], steps:"Spread hoarded fast food ketchup/mayo packets on crackers. Resourceful, not sad."},
+{name:"Plain Rice and Butter", cat:"Desperate Tier", ing:["Regular rice","Butter"], steps:"Cook rice, stir in butter, add salt if you have it. Simple but it's food."},
+{name:"Saltines and Peanut Butter", cat:"Desperate Tier", ing:["Saltine crackers","Peanut butter"], steps:"Spread peanut butter on crackers. Fast protein when there's nothing else."},
+{name:"Cereal With Water", cat:"Desperate Tier", ing:["Cereal","Water"], steps:"When there's no milk, water works in a pinch. It's not great but it's not nothing."},
+{name:"Cold Hot Dogs", cat:"Desperate Tier", ing:["Hot dogs","Mustard"], steps:"They're pre-cooked. Eat cold with mustard if you don't want to deal with a pan. No judgment."},
+{name:"Sugar Yogurt", cat:"Desperate Tier", ing:["Greek yogurt","Sugar packets"], steps:"Stir sugar packets into plain yogurt when you don't have honey or fruit. Gets the job done."},
+{name:"Soy Sauce Rice", cat:"Desperate Tier", ing:["Regular rice","Soy sauce"], steps:"Cook rice, drizzle soy sauce over it. That's the whole recipe."},
+{name:"Bread and Butter", cat:"Desperate Tier", ing:["Bread","Butter"], steps:"Butter a slice of bread. Eat it. This has fed broke people for centuries."},
+{name:"Chip Sandwich", cat:"Desperate Tier", ing:["Bread","Chips","Mayo"], steps:"Mayo on bread, a handful of chips crushed inside for crunch and salt. Genuinely underrated."},
+{name:"Water Bouillon Sip", cat:"Desperate Tier", ing:["Chicken bouillon","Water"], steps:"Dissolve a bouillon cube in hot water and just drink it like a warm salty broth when you're out of everything else."},
+{name:"Stale Chip Rescue", cat:"Desperate Tier", ing:["Chips","Hot sauce"], steps:"Douse slightly stale chips in hot sauce, they'll taste intentional again."},
+{name:"Frosting Toast", cat:"Desperate Tier", ing:["Bread","Frosting"], steps:"Spread frosting on bread like jam when there's nothing else sweet in the house."},
+{name:"Cracker Crumble Soup", cat:"Desperate Tier", ing:["Canned soup","Saltine crackers"], steps:"Heat the soup, crush a stack of crackers into it until it's thick enough to eat with a fork instead of a spoon."},
+{name:"Instant Potato Butter Bowl", cat:"Desperate Tier", ing:["Instant mashed potatoes","Butter","Black pepper"], steps:"Make instant mashed potatoes as directed, stir in extra butter and pepper to make it feel like more of a meal."},
+{name:"Mustard Sandwich", cat:"Desperate Tier", ing:["Bread","Mustard"], steps:"Same deal as the mayo sandwich, just tangier. Broke is broke."},
+{name:"Popcorn Dinner", cat:"Desperate Tier", ing:["Popcorn","Butter"], steps:"Pop a big bowl, melt extra butter over it, call it dinner. Everyone's done this at least once."},
+{name:"Applesauce and Crackers", cat:"Desperate Tier", ing:["Applesauce cup","Saltine crackers"], steps:"Dip crackers into applesauce. Sweet and salty, zero cooking required."},
+{name:"Gravy Packet Toast", cat:"Desperate Tier", ing:["Gravy packet","Bread"], steps:"Make gravy from the packet, pour over toast when you don't have anything else to put it on."},
+{name:"Coffee Creamer Straight", cat:"Desperate Tier", ing:["Coffee creamer"], steps:"A splash in your mouth counts as a snack when the fridge is truly empty. We don't recommend it, but we understand it."},
+
+// ---------- BATCH 2 ----------
+{name:"Lemon Garlic Ramen", cat:"Noodles", ing:["Ramen noodles","Garlic powder","Butter","Black pepper"], steps:"Boil noodles, drain, toss hot with butter, garlic powder, and pepper until glossy and fragrant."},
+{name:"Ramen Burrito", cat:"Noodles", ing:["Ramen noodles","Tortillas","Canned beans","Shredded cheese"], steps:"Cook and drain noodles, layer with beans and cheese inside a tortilla, roll tight and pan-fry seam-down."},
+{name:"Worcestershire Ramen", cat:"Noodles", ing:["Ramen noodles","Worcestershire sauce","Butter"], steps:"Boil and drain noodles, toss with butter and a few dashes of Worcestershire for a savory, steakhouse-adjacent flavor."},
+{name:"Ramen Fried Patty", cat:"Noodles", ing:["Ramen noodles","Eggs","Shredded cheese"], steps:"Cook noodles, mix with a beaten egg and cheese, press into a hot pan as a flat patty, fry both sides until crisp."},
+{name:"Spaghetti Butter Pepper", cat:"Noodles", ing:["Spaghetti","Butter","Black pepper","Shredded cheese"], steps:"Boil spaghetti, drain, toss hot with butter, a generous crack of pepper, and cheese until it clumps into a light sauce."},
+{name:"Tuna Rice-A-Roni", cat:"Rice", ing:["Rice-A-Roni","Canned tuna","Frozen peas"], steps:"Make Rice-A-Roni as directed, stir in drained tuna and frozen peas in the last few minutes."},
+{name:"Curry-ish Bouillon Rice", cat:"Rice", ing:["Regular rice","Chicken bouillon","Butter","Black pepper"], steps:"Cook rice in bouillon water, stir in butter and a heavy crack of pepper for a simple savory bowl."},
+{name:"Salsa Chicken Rice", cat:"Rice", ing:["Canned chicken","Instant rice","Salsa","Shredded cheese"], steps:"Cook rice, mix in canned chicken and salsa, top with cheese and microwave to melt."},
+{name:"Rice and Gravy", cat:"Rice", ing:["Regular rice","Gravy packet"], steps:"Cook rice, make gravy from the packet, pour over top. Simple, filling, done in ten minutes."},
+{name:"Corn and Bean Rice Bowl", cat:"Rice", ing:["Instant rice","Frozen corn","Canned beans","Hot sauce"], steps:"Cook rice with corn added the last 2 minutes, stir in beans, top with hot sauce."},
+{name:"Ham-less Cuban Toast", cat:"Toast & Bread", ing:["Bread","Sliced cheese","Mustard","Butter"], steps:"Layer cheese and a swipe of mustard between bread, butter the outside, press in a pan until crispy and melted."},
+{name:"Broke Caprese Toast", cat:"Toast & Bread", ing:["Bread","Sliced cheese","Canned diced tomatoes"], steps:"Toast bread, top with cheese and a spoonful of drained diced tomatoes, broil until melted."},
+{name:"Peanut Butter Banana Wrap", cat:"Toast & Bread", ing:["Tortillas","Peanut butter","Bananas"], steps:"Spread peanut butter on a tortilla, add sliced banana, roll up tight."},
+{name:"Bagel Pizza Melt", cat:"Toast & Bread", ing:["Bagels","Shredded cheese","Marinara / pasta sauce"], steps:"Split and toast the bagel, spread sauce, top with cheese, broil until bubbly."},
+{name:"Egg Salad Sandwich", cat:"Toast & Bread", ing:["Eggs","Mayo","Bread","Mustard"], steps:"Hard boil and chop eggs, mix with mayo and a little mustard, pile onto bread."},
+{name:"Sriracha Egg Bowl", cat:"Eggs", ing:["Eggs","Sriracha","Instant rice"], steps:"Cook rice, fry an egg, place on top, drizzle sriracha over everything."},
+{name:"Egg and Bean Skillet", cat:"Eggs", ing:["Eggs","Canned beans","Salsa"], steps:"Heat beans with salsa in a pan, crack eggs on top, cover and cook until whites set."},
+{name:"Cottage Cheese Egg Scramble", cat:"Eggs", ing:["Eggs","Cottage cheese","Black pepper"], steps:"Whisk eggs with a spoon of cottage cheese for extra creaminess, scramble in a pan, finish with pepper."},
+{name:"Mustard Deviled Eggs", cat:"Eggs", ing:["Eggs","Mustard","Mayo","Black pepper"], steps:"Hard boil and halve eggs, mash yolks with mustard, mayo, and pepper, spoon back into the whites."},
+{name:"BBQ Beans and Rice Skillet", cat:"Canned Goods", ing:["Canned beans","Instant rice","BBQ sauce"], steps:"Cook rice, heat beans with BBQ sauce stirred in, combine and serve warm."},
+{name:"Tuna and Crackers Plate", cat:"Canned Goods", ing:["Canned tuna","Saltine crackers","Mayo","Black pepper"], steps:"Mix tuna with mayo and pepper, serve alongside a stack of crackers for scooping."},
+{name:"Chicken and Rice Soup Hack", cat:"Canned Goods", ing:["Canned soup","Canned chicken","Instant rice"], steps:"Heat soup, stir in extra canned chicken and a scoop of cooked rice to make it heartier."},
+{name:"Sausage Bean Rice Bowl", cat:"Canned Goods", ing:["Canned sausages","Canned beans","Instant rice"], steps:"Slice and heat sausages with beans in a pan, serve over cooked rice."},
+{name:"Salsa Bean Dip", cat:"Canned Goods", ing:["Canned beans","Salsa","Tortilla chips"], steps:"Mash beans slightly, heat with salsa stirred in, scoop with chips."},
+{name:"Frozen Corn Fritters Cheat", cat:"Frozen & Microwave", ing:["Frozen corn","Eggs","Shredded cheese"], steps:"Thaw corn slightly, mix with a beaten egg and cheese, fry small spoonfuls in a pan like little pancakes."},
+{name:"Waffle Ice Cream Stack", cat:"Frozen & Microwave", ing:["Frozen waffles","Ice cream","Chocolate syrup / Nesquik"], steps:"Toast waffles, stack with a scoop of ice cream between them, drizzle chocolate syrup on top."},
+{name:"Nugget Quesadilla", cat:"Frozen & Microwave", ing:["Frozen chicken nuggets","Tortillas","Shredded cheese"], steps:"Cook nuggets, chop up, layer with cheese in a tortilla, pan-fry both sides until crispy."},
+{name:"Frozen Meatball Sub Bowl", cat:"Frozen & Microwave", ing:["Frozen meatballs","Marinara / pasta sauce","Shredded cheese"], steps:"Heat meatballs in sauce, top with cheese, skip the bread and eat straight out of the bowl."},
+{name:"Corn and Cheese Microwave Cup", cat:"Frozen & Microwave", ing:["Frozen corn","Shredded cheese","Butter"], steps:"Microwave corn with butter, stir in cheese while hot until melted through."},
+{name:"Banana Cereal Bowl", cat:"Sweet & Snacks", ing:["Cereal","Bananas","Milk"], steps:"Slice banana into a bowl of cereal with milk for a slightly less sad breakfast."},
+{name:"Honey Cinnamon Yogurt", cat:"Sweet & Snacks", ing:["Greek yogurt","Honey","Cinnamon sugar"], steps:"Stir honey and a pinch of cinnamon sugar into plain yogurt."},
+{name:"Marshmallow Hot Chocolate Toast", cat:"Sweet & Snacks", ing:["Bread","Chocolate syrup / Nesquik","Marshmallows"], steps:"Toast bread, drizzle chocolate syrup, top with marshmallows, broil a minute until they puff and toast slightly."},
+{name:"PB Cracker Ice Cream Sandwich", cat:"Sweet & Snacks", ing:["Graham crackers","Peanut butter","Ice cream"], steps:"Spread peanut butter on graham crackers, sandwich a scoop of softened ice cream between two, freeze 15 minutes."},
+{name:"Cereal Trail Mix", cat:"Sweet & Snacks", ing:["Cereal","Pretzels","Chips"], steps:"Mix cereal, pretzels, and crushed chips in a bowl for a sweet-salty snack mix."},
+{name:"Sprinkle Toast", cat:"Sweet & Snacks", ing:["Bread","Butter","Sprinkles"], steps:"Butter toast while warm, add sprinkles so they stick — a broke version of fairy bread."},
+{name:"Jello Whipped Cream Cup", cat:"Sweet & Snacks", ing:["Jello","Whipped cream"], steps:"Make jello as directed, top with whipped cream once set."},
+{name:"Iced Mocha Hack", cat:"Drinks", ing:["Instant coffee","Chocolate syrup / Nesquik","Milk","Water"], steps:"Dissolve instant coffee in a splash of hot water, stir in chocolate syrup, fill the rest with milk and ice."},
+{name:"Fizzy Juice Hack", cat:"Drinks", ing:["Soda","Water"], steps:"Cut soda with water and ice when you're trying to stretch a two-liter further than it should go."},
+{name:"Warm Bouillon Sip Upgrade", cat:"Drinks", ing:["Chicken bouillon","Water","Black pepper"], steps:"Dissolve bouillon in hot water, crack pepper in, sip it like a cheap broth when you're sick or broke or both."},
+{name:"Ranch Cracker Stack", cat:"Desperate Tier", ing:["Saltine crackers","Ranch"], steps:"Dip crackers straight into the ranch bottle. Efficient, no dishes, gets the job done."},
+{name:"Butter Sugar Toast", cat:"Desperate Tier", ing:["Bread","Butter","Brown sugar"], steps:"Butter bread, sprinkle brown sugar on top, toast in a pan until it caramelizes slightly at the edges."}
+];
+
+let selected = new Set();
+let activeTab = "All";
+
+function renderCategories(){
+  const el = document.getElementById('categories');
+  el.innerHTML = '';
+  Object.entries(INGREDIENTS).forEach(([cat, items])=>{
+    const box = document.createElement('div');
+    box.className = 'cat';
+    const h = document.createElement('h3');
+    h.textContent = cat;
+    box.appendChild(h);
+    const grid = document.createElement('div');
+    grid.className = 'chip-grid';
+    items.forEach(ing=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = ing;
+      chip.dataset.ing = ing;
+      chip.addEventListener('click', ()=>{
+        if(selected.has(ing)){ selected.delete(ing); chip.classList.remove('on'); }
+        else { selected.add(ing); chip.classList.add('on'); }
+        updateCount();
+        renderRecipes();
+      });
+      grid.appendChild(chip);
+    });
+    box.appendChild(grid);
+    el.appendChild(box);
+  });
+}
+
+function updateCount(){
+  const c = selected.size;
+  document.getElementById('pantryCount').textContent = c===0 ? "0 things selected" : c + " thing" + (c===1?"":"s") + " selected";
+}
+
+function renderTabs(){
+  const cats = ["All", ...new Set(RECIPES.map(r=>r.cat))];
+  const bar = document.getElementById('tabbar');
+  bar.innerHTML = '';
+  cats.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (c===activeTab ? ' active' : '');
+    btn.textContent = c;
+    btn.addEventListener('click', ()=>{
+      activeTab = c;
+      renderTabs();
+      renderRecipes();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+function renderRecipes(){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyState');
+  grid.innerHTML = '';
+  const title = document.getElementById('resultsTitle');
+  const sortNote = document.getElementById('sortNote');
+
+  let base = activeTab === "All" ? RECIPES : RECIPES.filter(r=>r.cat === activeTab);
+
+  let list = base.map(r=>{
+    const have = r.ing.filter(i=>selected.has(i)).length;
+    return {...r, have, pct: Math.round((have/r.ing.length)*100)};
+  });
+
+  const countLabel = activeTab === "All" ? `All ${base.length} recipes` : `${activeTab} (${base.length})`;
+
+  if(selected.size === 0){
+    title.textContent = countLabel;
+    sortNote.textContent = "tap a card for full instructions";
+    list.sort((a,b)=>a.name.localeCompare(b.name));
+  } else {
+    title.textContent = "Sorted by what you can make";
+    sortNote.textContent = "highlighted ingredients are ones you have";
+    list = list.filter(r=>r.have > 0);
+    list.sort((a,b)=> b.pct - a.pct || b.have - a.have);
+  }
+
+  if(list.length === 0){
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  list.forEach(r=>{
+    const card = document.createElement('div');
+    card.className = 'recipe' + (r.pct===100 && selected.size>0 ? ' match100' : '');
+    card.innerHTML = `
+      ${selected.size>0 ? `<div class="badge">${r.have}/${r.ing.length} have</div>` : ''}
+      <span class="cat-label">${r.cat}</span>
+      <h4>${r.name}</h4>
+      <div class="ing-list">${r.ing.map(i=> selected.has(i) ? `<b>${i}</b>` : i).join(', ')}</div>
+    `;
+    card.addEventListener('click', ()=> openModal(r));
+    grid.appendChild(card);
+  });
+}
+
+function openModal(r){
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <button class="close" id="closeBtn">&times;</button>
+    <span class="cat-label">${r.cat}</span>
+    <h3>${r.name}</h3>
+    <ul>${r.ing.map(i=>`<li>${selected.has(i) ? '<b>'+i+'</b> (got it)' : i}</li>`).join('')}</ul>
+    <div class="steps">${r.steps}</div>
+  `;
+  overlay.classList.add('open');
+  document.getElementById('closeBtn').addEventListener('click', closeModal);
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+document.getElementById('modalOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'modalOverlay') closeModal();
+});
+
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  selected.clear();
+  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  updateCount();
+  renderRecipes();
+});
+
+renderCategories();
+renderTabs();
+renderRecipes();
+</script>
+</body>
+</html>
